@@ -27,7 +27,7 @@ public class KinesisWorkerServletInitiator implements ServletContextListener {
         if (consumerClassName != null && !consumerClassName.equals("")) {
             try {
                 final Class consumerClass = (Class) Class.forName(consumerClassName);
-                final Method runMethod = consumerClass.getMethod("run", null);
+                final Method runMethod = consumerClass.getMethod("main",  String[].class);
                 runMethod.setAccessible(true);
                 final Object consumer = consumerClass.newInstance();
 
@@ -44,7 +44,8 @@ public class KinesisWorkerServletInitiator implements ServletContextListener {
                     @Override
                     public void run() {
                         try {
-                            m.invoke(o, null);
+                            String[] params = null;
+                            m.invoke(o,  (Object) params);
                         } catch (Exception e) {
                             e.printStackTrace();
                             LOG.error(e);
